@@ -1,2 +1,2 @@
-# bluebot-supporter
-Support API server providing data for bluebot
+# du-market-archiver
+Dual Universe market API archiver
