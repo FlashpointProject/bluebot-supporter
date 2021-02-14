@@ -78,7 +78,10 @@ func main() {
 }
 
 func (a *App) handleRequests(conf *Config, srv *http.Server, router *mux.Router) {
-	router.Handle("/ping", http.HandlerFunc(isAuthorized(conf.AccessKeys, a.pingEndpointHandler))).Methods("GET")
+	// gods only
 	router.Handle("/update-db", http.HandlerFunc(isAuthorized(conf.AccessKeys, a.UpdateDBHandler))).Methods("POST")
+	// open
+	router.Handle("/ping", http.HandlerFunc(a.pingEndpointHandler)).Methods("GET")
+	router.Handle("/tags", http.HandlerFunc(a.GetTagsHandler)).Methods("GET")
 	srv.ListenAndServe()
 }
