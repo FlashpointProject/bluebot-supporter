@@ -11,6 +11,7 @@ func isAuthorized(keys []AccessKey, next func(http.ResponseWriter, *http.Request
 
 		if len(reqKey) == 0 {
 			http.Error(w, "missing access key", http.StatusUnauthorized)
+			return
 		}
 
 		for _, ak := range keys {
