@@ -84,5 +84,6 @@ func (a *App) handleRequests(conf *Config, srv *http.Server, router *mux.Router)
 	router.Handle("/ping", http.HandlerFunc(a.pingEndpointHandler)).Methods("GET")
 	router.Handle("/tags", http.HandlerFunc(a.GetTagsHandler)).Methods("GET")
 	router.Handle("/launch-commands", http.HandlerFunc(a.GetLaunchCommandsHandler)).Methods("GET")
+	router.Handle("/master-db", http.HandlerFunc(a.GetMasterDB)).Methods("GET")
 	srv.ListenAndServe()
 }

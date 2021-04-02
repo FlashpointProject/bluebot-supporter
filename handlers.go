@@ -63,7 +63,7 @@ func (a *App) UpdateDBHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var openErr error
-	for i := 0; i < 10; i++ {
+	for i := 0; i < 30; i++ {
 		lc(ctx).Debugln("opening new db")
 		a.dbLayer.db, openErr = openDatabase(a.l)
 		if openErr == nil {
@@ -76,7 +76,8 @@ func (a *App) UpdateDBHandler(w http.ResponseWriter, r *http.Request) {
 		lc(ctx).Error(err)
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		os.Rename(bakName, dbName) // TODO handle error
-		return
+		lc(ctx).Fatal("failed to open database")
+		os.Exit(1)
 	}
 	os.Remove(bakName) // TODO handle error
 	lc(ctx).Debugln("db update finished")
@@ -158,4 +159,22 @@ func (a *App) GetLaunchCommandsHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(payloadBuf.Bytes())
+}
+
+// GetMasterDB returns the master DB
+func (a *App) GetMasterDB(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	a.dbLayer.Lock()
+	dbFile, err := ioutil.ReadFile(dbName)
+	a.dbLayer.Unlock()
+
+	if err != nil {
+		lc(ctx).Error(err)
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/vnd.sqlite3")
+	w.Header().Set("Content-Disposition", "attachment; filename=flashpoint-master-db.sqlite3")
+	w.Write(dbFile)
 }
