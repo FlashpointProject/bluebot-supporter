@@ -15,7 +15,8 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-const dbName = "master.db"
+// dbName is the SQLite database path, overridable with DB_PATH.
+var dbName = envOr("DB_PATH", "master.db")
 
 // App is App
 type App struct {
@@ -46,7 +47,7 @@ func main() {
 	l.Infoln("initializing the server")
 	router := mux.NewRouter()
 	srv := &http.Server{
-		Addr:    fmt.Sprintf("127.0.0.1:%d", conf.Port),
+		Addr:    fmt.Sprintf("%s:%d", envOr("BIND_ADDR", "127.0.0.1"), conf.Port),
 		Handler: logRequestHandler(l, router),
 	}
 
@@ -78,12 +79,8 @@ func main() {
 }
 
 func (a *App) handleRequests(conf *Config, srv *http.Server, router *mux.Router) {
-	// gods only
-	router.Handle("/update-db", http.HandlerFunc(isAuthorized(conf.AccessKeys, a.UpdateDBHandler))).Methods("POST")
-	// open
 	router.Handle("/ping", http.HandlerFunc(a.pingEndpointHandler)).Methods("GET")
 	router.Handle("/tags", http.HandlerFunc(a.GetTagsHandler)).Methods("GET")
 	router.Handle("/launch-commands", http.HandlerFunc(a.GetLaunchCommandsHandler)).Methods("GET")
-	router.Handle("/master-db", http.HandlerFunc(a.GetMasterDB)).Methods("GET")
 	srv.ListenAndServe()
 }

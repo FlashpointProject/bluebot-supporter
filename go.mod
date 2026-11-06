@@ -1,6 +1,6 @@
 module github.com/Dri0m/bluebot-supporter
 
-go 1.15
+go 1.27
 
 require (
 	github.com/felixge/httpsnoop v1.0.1
@@ -8,7 +8,10 @@ require (
 	github.com/gorilla/mux v1.8.0
 	github.com/mattn/go-sqlite3 v1.14.6
 	github.com/sirupsen/logrus v1.7.0
+	gopkg.in/natefinch/lumberjack.v2 v2.0.0
+)
+
+require (
 	github.com/stretchr/testify v1.5.1 // indirect
 	golang.org/x/sys v0.0.0-20200223170610-d5e6a3e2c0ae // indirect
-	gopkg.in/natefinch/lumberjack.v2 v2.0.0
 )

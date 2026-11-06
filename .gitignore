@@ -15,3 +15,10 @@
 *.db
 *.log
 bluebot-supporter
+# Local config (see config.example.json)
+/config.json
+*.db-shm
+*.db-wal
+*.db.zst
+*.db.bak
+*.db.tmp
